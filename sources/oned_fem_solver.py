@@ -55,9 +55,6 @@ def forward_solver(a=0., b=1.,u_a=0., u_b=1., n_elements=50, q=None, eta=1., f=N
     # Initialize the RHS
     c = np.zeros(n_equations)
 
-    # boundary conditions
-    def bc(x): return 0 if x == a else 1
-
     # Assembly
     # Gauss rule accurate to degree (2n-1), n is the input of oned_gauss
     r, w = oned_gauss(11)
@@ -101,7 +98,7 @@ def forward_solver(a=0., b=1.,u_a=0., u_b=1., n_elements=50, q=None, eta=1., f=N
                         count = count + 1
                     else:
                         # Dirichlet node: apply dirichlet condition
-                        u_dir = bc(x_loc[m])
+                        u_dir = u_a if m==0 else u_b
                         # print("This is the Dirichlet nodes: ", u_dir, ", Location: ", x_loc[m])
                         c[j_eqn] = c[j_eqn] - A_loc[j, m] * u_dir
 
@@ -127,8 +124,14 @@ def forward_solver(a=0., b=1.,u_a=0., u_b=1., n_elements=50, q=None, eta=1., f=N
 
 
 if __name__ == "__main__":
+    import matplotlib.pyplot as plt
     eta = 1
-    q = lambda x: 1 + 0.5 * np.cos(2*np.pi*(x/1.2) + eta)
-    f = lambda x: x**2
-    x,u = forward_solver(a=0, b=1,u_a=0.0, u_b=1.0, n_elements=50, q=q, eta=1, f=f)
-    print(x)
+    u = lambda x: np.cos(x)  # true 'manufactured' solution
+    q = lambda x: x**2
+    f = lambda x: 2*x*np.sin(x) + x**2 * np.cos(x)
+    x,y = forward_solver(a=-np.pi, b=np.pi, u_a=-1, u_b=-1, n_elements=10, q=q, eta=1, f=f)
+
+    plt.plot(x, y, label='fem soln')
+    plt.plot(x, u(x), label='true soln')
+    plt.legend()
+    plt.show()
