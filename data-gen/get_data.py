@@ -1,3 +1,7 @@
+"""
+Run 1D finite element over different realizations of a random variable to generate data for fine and coarse scale elements
+"""
+
 import sys
 sys.path.append('../sources')
 
