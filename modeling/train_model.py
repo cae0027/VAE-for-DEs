@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 
 in_features, out_features = 22, 2001
 def run_model(in_features=22, out_features=2001, epochs=64, lr=0.0005, batch_size=64):
+    """
+    Great for easy calls during hyperparameter tuning
+    """
     model = CVAE(in_features=in_features, out_features=out_features).to(device)
     epochs = epochs
     lr = lr
