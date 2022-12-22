@@ -19,6 +19,8 @@ class EvalCoarseSoln:
         self.w = w
         self.x_f = x_f
         self.e_f = e_f
+        self.x_c = x_c
+        self.e_c = e_c
 
     def evalcoarsesoln(self, coarse_elements=5, fine_elements=40, u_c=None):
         """
@@ -28,10 +30,10 @@ class EvalCoarseSoln:
         u_catf = np.zeros(self.x_f.shape)
         for i in range(coarse_elements):
             # Local node indices
-            i_loc = e_c[i,:]
+            i_loc = self.e_c[i,:]
             
             # Coarse element vertices
-            x_loc = x_c[i_loc]
+            x_loc = self.x_c[i_loc]
             
             # Ensure coarse solution is not None
             assert u_c is not None, "Please provide the coarse solution u_c"
