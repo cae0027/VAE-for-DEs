@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 in_features, out_features = 22, 2001
-def run_model(in_features=22, out_features=2001, epochs=64, lr=0.0005, batch_size=64):
+def run_model(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_size=30):
     """
     Great for easy calls during hyperparameter tuning
     """
@@ -49,13 +49,16 @@ def run_model(in_features=22, out_features=2001, epochs=64, lr=0.0005, batch_siz
         plt.plot(x, val_out_orig, label='true soln')
         plt.plot(x, val_out_model, label='cvae soln')
         plt.legend()
-        plt.ylim([-36, 3])
+        plt.ylim([-75, 3])
         plt.pause(0.01)
         # plt.show()
 
 
 
 
-    # plt.plot(x, model_result.T)
+    plt.plot(x, model_result.T)
     plt.show()
     return x, model_result, soln_true
+
+if __name__ == '__main__':
+    run_model()
