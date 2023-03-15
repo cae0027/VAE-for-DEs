@@ -45,12 +45,12 @@ def run_model(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
         print(f"Train Loss: {train_epoch_loss:.8f}")
         print(f"Val Loss: {val_epoch_loss:.8f}")
 
-        plt.clf()
-        plt.plot(x, val_out_orig, label='true soln')
-        plt.plot(x, val_out_model, label='cvae soln')
-        plt.legend()
-        plt.ylim([-75, 3])
-        plt.pause(0.01)
+        # plt.clf()
+        # plt.plot(x, val_out_orig, label='true soln')
+        # plt.plot(x, val_out_model, label='cvae soln')
+        # plt.legend()
+        # plt.ylim([-35, 3])
+        # plt.pause(0.01)
         # plt.show()
 
 
@@ -58,7 +58,7 @@ def run_model(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
 
     plt.plot(x, model_result.T)
     plt.show()
-    return x, model_result, soln_true
+    return x, model_result, soln_true, model
 
 if __name__ == '__main__':
     run_model()
