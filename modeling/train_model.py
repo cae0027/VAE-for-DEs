@@ -20,7 +20,7 @@ batch_size = 30
 # load data
 fine_path = '../data-gen/fine_scale_data_y.npy'
 coarse_path = '../data-gen/coarse_scale_data_y.npy'
-train_loaderf, val_loaderf, train_loaderc, val_loaderc = load_data(coarse_path, fine_path, split_frac=0.8, batch_size=batch_size)
+train_loaderf, val_loaderf = load_data(coarse_path, fine_path, split_frac=0.8, batch_size=batch_size)
 
 def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_size=batch_size):
     """
@@ -43,8 +43,8 @@ def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
     soln_true = np.zeros((epochs, out_features))
     for epoch in range(epochs):
         print(f"Epoch {epoch+1} of {epochs}")
-        train_epoch_loss = fit(model, train_loaderf, train_loaderc, optimizer, criterion)
-        val_epoch_loss, val_out_orig, val_out_model = validate(model, val_loaderf, val_loaderc, criterion)
+        train_epoch_loss = fit(model, train_loaderf, optimizer, criterion)
+        val_epoch_loss, val_out_orig, val_out_model = validate(model, val_loaderf, criterion)
         train_loss.append(train_epoch_loss)
         val_loss.append(val_epoch_loss)
         model_result[epoch, :] = val_out_model
@@ -66,12 +66,16 @@ def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
     plt.plot(x, model_result.T)
     plt.show()
     return x, model_result, soln_true, model
+
+
 criterion = nn.MSELoss()
 # comp = EvalCoarseSoln()
 error = []
 def run_test(model):
-    for ycb, yfb in zip(val_loaderc, val_loaderf):
+    for ycb, yfb in  val_loaderf:
         for yc, yf in zip(ycb, yfb):
+            print(yc.shape)
+            break
             z = torch.randn((1,in_features))
             z = torch.cat((z, yc), dim=1)
 

@@ -21,7 +21,7 @@ def final_loss(bce_loss, mu, logvar):
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     return BCE + KLD
 
-def fit(model, dataloaderf, dataloaderc, optimizer, criterion):
+def fit(model, dataloaderf, optimizer, criterion):
     model.train()
     running_loss = 0.0
     for i, (dataf, datac) in enumerate(dataloaderf):
@@ -39,7 +39,7 @@ def fit(model, dataloaderf, dataloaderc, optimizer, criterion):
     train_loss = running_loss/len(dataloaderf.dataset)
     return train_loss
 
-def validate(model, dataloaderf, dataloaderc, criterion):
+def validate(model, dataloaderf, criterion):
     model.eval()
     running_loss = 0.0
     with torch.no_grad():
