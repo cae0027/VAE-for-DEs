@@ -38,9 +38,9 @@ def load_data(coarse_path, fine_path, split_frac=0.8, batch_size=20):
                         torch.from_numpy(train_datac))
     valf_y = TensorDataset(torch.from_numpy(val_dataf), torch.from_numpy(val_datac))
 
-    trainc_y = TensorDataset(torch.from_numpy(train_datac),
-                            torch.from_numpy(train_datac))
-    valc_y = TensorDataset(torch.from_numpy(val_datac), torch.from_numpy(val_datac))
+    # trainc_y = TensorDataset(torch.from_numpy(train_datac),
+    #                         torch.from_numpy(train_datac))
+    # valc_y = TensorDataset(torch.from_numpy(val_datac), torch.from_numpy(val_datac))
 
     # training and validation data loaders
     # fine scale loader
@@ -55,18 +55,18 @@ def load_data(coarse_path, fine_path, split_frac=0.8, batch_size=20):
         shuffle=True
     )
 
-    # coarse scale loader
-    train_loaderc = DataLoader(
-        trainf_y,
-        batch_size=batch_size,
-        shuffle=False
-    )
-    val_loaderc = DataLoader(
-        valf_y,
-        batch_size=batch_size,
-        shuffle=False
-    )
-    return train_loaderf, val_loaderf, train_loaderc, val_loaderc
+    # # coarse scale loader
+    # train_loaderc = DataLoader(
+    #     trainf_y,
+    #     batch_size=batch_size,
+    #     shuffle=False
+    # )
+    # val_loaderc = DataLoader(
+    #     valf_y,
+    #     batch_size=batch_size,
+    #     shuffle=False
+    # )
+    return train_loaderf, val_loaderf
 
 
 
