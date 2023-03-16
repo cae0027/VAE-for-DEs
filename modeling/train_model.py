@@ -20,7 +20,7 @@ batch_size = 30
 # load data
 fine_path = '../data-gen/fine_scale_data_y.npy'
 coarse_path = '../data-gen/coarse_scale_data_y.npy'
-train_loaderf, val_loaderf, train_loaderc, val_loaderc = load_data(coarse_path, fine_path, split_frac=0.8, batch_size=batch_size)
+train_loaderf, val_loaderf = load_data(coarse_path, fine_path, split_frac=0.8, batch_size=batch_size)
 
 def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_size=batch_size):
     """
@@ -66,11 +66,13 @@ def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
     plt.plot(x, model_result.T)
     plt.show()
     return x, model_result, soln_true, model
+
+
 criterion = nn.MSELoss()
 # comp = EvalCoarseSoln()
 error = []
 def run_test(model):
-    for ycb, yfb in zip(val_loaderc, val_loaderf):
+    for ycb, yfb in  val_loaderf:
         for yc, yf in zip(ycb, yfb):
             print(yc.shape)
             break
