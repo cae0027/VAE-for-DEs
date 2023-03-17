@@ -5,13 +5,13 @@ Compute error between CVAE solution and true finite element solution using inner
 import sys
 sys.path.append('../sources')
 
-from train_model import run_model
+from train_model import run_train, run_test
 from fem_error_1d import EvalCoarseSoln
 import matplotlib.pyplot as plt
 
 
 # run CVAE to get reconstructed solutions, along with true solns
-x, model_result, true_soln = run_model(epochs=500)
+x, model_result, true_soln, model = run_train(epochs=500)
 
 # boundary points
 a = -1  
@@ -26,3 +26,5 @@ for i in range(len(model_result)):
     error.append(err)
 plt.plot(error)
 plt.show()
+
+run_test(model)
