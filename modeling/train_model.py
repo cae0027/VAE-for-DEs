@@ -9,7 +9,7 @@ from load_data import load_data
 from fem_error_1d import EvalCoarseSoln
 # Built in import
 import torch
-import torch.functional as F
+import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn as nn
 import numpy as np
@@ -68,27 +68,40 @@ def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
     return x, model_result, soln_true, model
 
 
-criterion = nn.MSELoss()
-# comp = EvalCoarseSoln()
-error = []
-def run_test(model):
-    for ycb, yfb in  val_loaderf:
-        for yc, yf in zip(ycb, yfb):
-            print(yc.shape)
-            break
-            z = torch.randn((1,in_features))
-            z = torch.cat((z, yc), dim=1)
+# load test data both coarse and fine scales
+test_data_f = np.load('../data-gen/fine_scale_test_data_y.npy').T.astype(np.float32)
+test_data_c = np.load('../data-gen/coarse_scale_test_data_y.npy').T.astype(np.float32)
 
-            y = F.relu(model.dec1(z))
-            y = F.relu(model.dec2(y))
-            y = F.relu(model.dec3(y))
-            y = model.dec4(y)
-            y = y[0, :].detach().numpy()
-            err = comp.error(y, yf)
-            error.append(err)
-            # plt.plot(x, y[0, :].detach().numpy())
-            # plt.plot(x, yf)
-    plt.plot(error)
+criterion = nn.MSELoss()
+comp = EvalCoarseSoln()
+error = []
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def run_test(model):
+    model.eval()
+    for yc, yf in  zip(test_data_c, test_data_f):
+        yc = torch.from_numpy(yc)[None, :].to(device)
+        z = torch.randn((1,in_features)).to(device)
+        z = torch.cat((z, yc), dim=1)
+
+        # print("shape of z: ", z.shape, "shape of yc: ", yc.shape, "In features: ", in_features)
+        # break
+        y = F.relu(model.dec1(z))
+        y = F.relu(model.dec2(y))
+        y = F.relu(model.dec3(y))
+        y = model.dec4(y)
+        y = y[0, :].detach().cpu().numpy()
+        # compute the norm of y
+        norm = comp.error(np.zeros(len(y)), y)
+        # compute the relative error in H1 norm
+        err = comp.error(y, yf) / norm
+        error.append(err)
+        # plt.plot(x, y[0, :].detach().numpy())
+        # plt.plot(x, yf)
+    print("Average relative error is: ", sum(error)/len(error))
+    plt.hist(error, bins=40)
+    plt.title(r"Histogram of relative error in $H^1(\Omega)$ norm")
+    plt.show()
     return np.array(error)
 
 
