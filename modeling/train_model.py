@@ -74,10 +74,11 @@ test_data_c = np.load('../data-gen/coarse_scale_test_data_y.npy').T.astype(np.fl
 
 criterion = nn.MSELoss()
 comp = EvalCoarseSoln()
-error = []
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def run_test(model):
+    error = []
     model.eval()
     for yc, yf in  zip(test_data_c, test_data_f):
         yc = torch.from_numpy(yc)[None, :].to(device)
@@ -92,17 +93,24 @@ def run_test(model):
         y = model.dec4(y)
         y = y[0, :].detach().cpu().numpy()
         # compute the norm of y
-        norm = comp.error(np.zeros(len(y)), y)
+        norm_yf = comp.error(np.zeros(len(yf)), yf)
         # compute the relative error in H1 norm
-        err = comp.error(y, yf) / norm
-        error.append(err)
+        err = comp.error(y, yf) / norm_yf
+
+        # # If you prefer RMSE
+        # er = (y-yf)**2 
+        # err = ((er).mean() / (yf**2).mean())**0.5
+        # RMSE emprirically way better than H1 norm
+
+        error.append(err**0.5)
         # plt.plot(x, y[0, :].detach().numpy())
         # plt.plot(x, yf)
-    print("Average relative error is: ", sum(error)/len(error))
+    error = np.array(error)
+    print("Average relative error is: ", np.mean(error))
     plt.hist(error, bins=40)
     plt.title(r"Histogram of relative error in $H^1(\Omega)$ norm")
     plt.show()
-    return np.array(error)
+    return error
 
 
 if __name__ == '__main__':
