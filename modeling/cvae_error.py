@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 
 # run CVAE to get reconstructed solutions, along with true solns
-x, model_result, true_soln, model = run_train(epochs=500)
+x, model_result, true_soln, model = run_train(epochs=300)
 
 # boundary points
 a = -1  

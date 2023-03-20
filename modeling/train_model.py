@@ -52,18 +52,24 @@ def run_train(in_features=22, out_features=2001, epochs=200, lr=0.0005, batch_si
         print(f"Train Loss: {train_epoch_loss:.8f}")
         print(f"Val Loss: {val_epoch_loss:.8f}")
 
-        # plt.clf()
-        # plt.plot(x, val_out_orig, label='true soln')
-        # plt.plot(x, val_out_model, label='cvae soln')
-        # plt.legend()
-        # plt.ylim([-35, 3])
-        # plt.pause(0.01)
+        plt.clf()
+        plt.plot(x, val_out_orig, label='true soln')
+        plt.plot(x, val_out_model, label='cvae soln')
+        plt.xlabel(r"$x$")
+        plt.ylabel(r'$u(x)$')
+        plt.title("Reconstructions vs True Solutions")
+        plt.legend()
+        # plt.ylim([-35, 3])   # use only when blow up occurs
+        plt.pause(0.01)
         # plt.show()
 
 
 
 
     plt.plot(x, model_result.T)
+    plt.title("Validation Reconstructions")
+    plt.xlabel(r"$x$")
+    plt.ylabel(r'$u(x)$')
     plt.show()
     return x, model_result, soln_true, model
 
