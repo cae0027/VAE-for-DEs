@@ -24,7 +24,7 @@ def f(x): return -(2.5 + 2*x)
 u_a = 0
 u_b = 1
 
-m = 500          # number of realizations
+m = 1000          # number of realizations
 f_elements = 2000
 c_elements = 21
 sample_parameter = np.zeros(m)

@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 a = -1  
 b = 1
 # Parameter function
-c = 21
+c = 5
 x0 = 0.1
 d = 0.01
 def q(x): return d + np.exp(c*(np.cos(2*np.pi*x / x0 + eta)))
