@@ -10,8 +10,8 @@ from fem_error_1d import EvalCoarseSoln
 import matplotlib.pyplot as plt
 
 
-# run CVAE to get reconstructed solutions, along with true solns
-x, model_result, true_soln, model = run_train(epochs=300)
+# run CVAE to get reconstructed validation solutions, along with their corresponding true solns
+x, model_result, true_soln, model = run_train(epochs=50, lr=5 ,no_layers=8)
 
 # boundary points
 a = -1  
@@ -24,7 +24,12 @@ error = []
 for i in range(len(model_result)):
     err = comp.error(model_result[i], true_soln[i])
     error.append(err)
-plt.plot(error)
+plt.xlabel("Epochs")
+plt.ylabel(r"$\Vert u - \hat{u}\Vert_{H^1(\Omega)}$")
+plt.title("Validation Error")
+plt.plot(error, color=(0.2, 0.3, 0.7, 0.8))
 plt.show()
 
-run_test(model)
+# test the model, 
+# turn on optim_params during hyperparameter optimization
+run_test(model, optim_params=True)
