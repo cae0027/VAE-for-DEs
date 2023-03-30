@@ -21,7 +21,13 @@ def motivate_gen(c_elements):
     # Parameter function
     x0 = 0.1
     c = 5
-    d = 0
+    d = 0.01
+    ##### if you want smooth parameter ######
+    # x0 = 1
+    # c = 1
+    # d = 0.01
+    ########################################
+
     def q(x): return d + np.exp(c*(np.cos(2*np.pi*x / x0 + eta)))
     # Forcing term
     def f(x): return -(2.5 + 2*x)
@@ -79,15 +85,17 @@ if __name__ == '__main__':
 # save result for plotting purposes
 np.save('error_over_diff_mesh.npy', np.array(result))
 np.save('h-4-error.npy', np.array(h))
+
+# use saved error so you don't have to rerun 
 import matplotlib.pyplot as plt
 import numpy as np
 result = np.load('error_over_diff_mesh.npy')
 h = np.load('h-4-error.npy')
-plt.plot(np.log(h), np.log(result))
-# plt.plot(list(np.arange(1000,1200)), result[1000:1200])
+plt.plot(np.log(h), np.log(result), color=(0.2, 0.3, 0.7, 0.8))
 plt.xlabel(r'$\log(h)$')
 plt.ylabel(r"$\log \Vert u_c - u_f \Vert_{L^2}$")
-# plt.title("Error Zoomed in")
+plt.title("FEM Error for Heterogeneous Media")
+# plt.title("FEM Error for Homogeneous Media")
 plt.show()
 
 
