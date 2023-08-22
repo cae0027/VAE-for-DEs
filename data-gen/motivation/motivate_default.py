@@ -38,6 +38,7 @@
 #     fine_store = np.zeros((len(xf), m))
 #     coarse_store = np.zeros((len(xc), m))
 
+<<<<<<< HEAD
 #     # fig = plt.figure(figsize=(10, 5))
 #     # axf = plt.subplot(1, 2, 1)
 #     # axc = plt.subplot(1, 2, 2)
@@ -54,6 +55,32 @@
 #     # plt.ylabel(r"$u(x)$")
 #     # fig.tight_layout() 
 #     # plt.show()
+=======
+# Generate fine and coarse scales solutions for some realizations of the random variable
+# Interval end points
+def motivate_gen(c_elements):
+    """
+    Fix fine mesh at 2000 elements and vary the coarse elemts `c_elements` to generate solutions across scales
+    """
+    # np.random.seed(4)
+    a = -1  
+    b = 1
+    # Parameter function
+    x0 = 0.1
+    c = 5
+    d = 0.01
+    ##### if you want smooth parameter ######
+    # x0 = 1
+    # c = 1
+    # d = 0.01
+    ########################################
+
+    def q(x): return d + np.exp(c*(np.cos(2*np.pi*x / x0 + eta)))
+    # Forcing term
+    def f(x): return -(2.5 + 2*x)
+    u_a = 0
+    u_b = 1
+>>>>>>> b4dc9b073e9074b531368e326b1a9005c1854a34
 
 #     return coarse_store, fine_store
 
@@ -82,10 +109,38 @@
 # np.save('h-4-error.npy', np.array(h))
 
 
+<<<<<<< HEAD
+=======
+# Vary c_elements from 1 to 2000 and run forward solver.  In each case, interpolate the coarse scale soln on fine mesh and compute the error with fine mesh.
+result = []
+from fem_error_1d import EvalCoarseSoln
+a = -1
+b = 1
+h = []
+if __name__ == '__main__':
+    for i in range(2,2000+1):
+        h.append( (b - a)/i )
+        err = EvalCoarseSoln(a=-1, b=1, coarse_elements=i, fine_elements=2000)
+        # generate forward solution
+        coarse_soln, fine_soln =  motivate_gen(i)
+        # interpolate coarse soln over fine mesh
+        u_c = err.evalcoarsesoln(coarse_elements=i, fine_elements=2000, u_c=coarse_soln[:,0])
+        # compute error between coarse and fine mesh
+        err_curr = err.error(u_c, fine_soln[:,0])
+        result.append(err_curr)
+        # see order of error
+        print(err_curr, "   ", i)
+# save result for plotting purposes
+np.save('error_over_diff_mesh.npy', np.array(result))
+np.save('h-4-error.npy', np.array(h))
+
+# use saved error so you don't have to rerun 
+>>>>>>> b4dc9b073e9074b531368e326b1a9005c1854a34
 import matplotlib.pyplot as plt
 import numpy as np
 result = np.load('error_over_diff_mesh.npy')
 h = np.load('h-4-error.npy')
+<<<<<<< HEAD
 # plt.plot(np.log(h), np.log(result))
 # plt.plot(list(np.arange(1000,1200)), result[1000:1200])
 plt.loglog(h, result, '>', color='purple', markersize=3)
@@ -93,6 +148,13 @@ plt.xlabel(r'$\log(h)$')
 plt.ylabel(r"$\log \Vert u_i - u_f \Vert_{L^2}$")
 plt.title("FEM Interpolation Error")
 # plt.title("Error Zoomed in")
+=======
+plt.plot(np.log(h), np.log(result), color=(0.2, 0.3, 0.7, 0.8))
+plt.xlabel(r'$\log(h)$')
+plt.ylabel(r"$\log \Vert u_c - u_f \Vert_{L^2}$")
+plt.title("FEM Error for Heterogeneous Media")
+# plt.title("FEM Error for Homogeneous Media")
+>>>>>>> b4dc9b073e9074b531368e326b1a9005c1854a34
 plt.show()
 
 

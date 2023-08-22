@@ -5,12 +5,13 @@ Conditional variational autoencoder model architecture for reconstructing fine s
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import random
 
 # No of coarse elements is 21 while fine is 2000, so
 in_features, out_features = 22, 2001
 
 class CVAE(nn.Module):
-    def __init__(self, in_features=in_features, out_features=out_features):
+    def __init__(self, in_features=in_features, out_features=out_features, no_layers=5):
         super(CVAE, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -55,8 +56,40 @@ class CVAE(nn.Module):
         # reconstruction = torch.sigmoid(self.dec2(x))
         reconstruction = self.dec4(x)
         return reconstruction, mu, log_var
+    
+    
+
+    def net_inp_out_sizes(self, no_layers=6):
+        """
+        accepts number of layers and generates VAE layers input and output integers for number of layers hyperparameter optimization
+        """
+        no_layers = no_layers
+        input_size = self.out_features
+
+        a = []
+        for i in range(no_layers):
+            a.append(input_size//2**(i+1))
+        a.append(1)
+        a = a[::-1]
+        left = [random.randint(a[i], a[i+1]) for i in range(len(a)-1)]
+        if len(left) == 1:
+            sometimes = [random.randint(a[-1], a[-1])]
+        else:
+            sometimes = [random.randint(a[i+1], a[i+2]) for i in range(len(a)-2)]
+        sometimes.append(random.randint(sometimes[-1], input_size))
+        # use sometimes with 2/10 probability to explore higher dimensions
+        choice = random.randint(0,10)
+        if choice < 2:
+            left = sometimes[:]
+        right = left[:]
+        left.pop(0)
+        left.append(input_size)
+        # ensure ouput match for no_layer=1
+        if no_layers==1 and len(left)>1:
+            return [left[-1]], [right[0]]
+        return left[::-1], right[::-1]
 
 
 if __name__ == '__main__':
-    model = CVAE(in_features=in_features, out_features=out_features)
+    model = CVAE(in_features=in_features, out_features=out_features, no_layers=5)
     print(model)
