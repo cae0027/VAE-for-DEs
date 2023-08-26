@@ -48,6 +48,17 @@ for i in range(m):
     axc.plot(xc, cua)       # coarse soln
     plt.pause(0.05)
     print(f"Iteration {i}/{m}")
+
+    ########### For oral Exam #############
+#     plt.plot(xc, cua, label=r"$\omega={:.2f}$".format(eta))
+#     if i==10:
+#         break
+# plt.legend()
+# plt.title("10 Coarse Solutions")
+# plt.xlabel(r"$x$")
+# plt.ylabel(r"$\hat{u}_c(x)$")
+# plt.show()
+######### End oral exam ##############
 np.save('fine_scale_test_data_y.npy', fine_store)    # save solution as np array
 np.save('coarse_scale_test_data_y.npy', coarse_store)    # save solution as np array
 np.save('fine_scale_test_data_x.npy', xf)    # save x fine values
