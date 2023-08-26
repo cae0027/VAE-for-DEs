@@ -72,6 +72,17 @@ def run_train(in_features=in_features, out_features=out_features, epochs=200, lr
     #         plt.pause(0.01)
     # plt.show()
 
+    ######## Plot training and validation losses #######
+    plt.plot(np.arange(1,epochs+1)[2:], train_loss[2:], label="training loss")
+    plt.plot(np.arange(1,epochs+1)[2:], val_loss[2:], label='validation loss')
+    plt.legend()
+    plt.title(f'Batch Size={batch_size}, Learning Rate={lr}')
+    plt.xlabel('Epoch')
+    # plt.ylabel(r"$\log \left(\Vert u - \hat{u}\Vert_{\ell^2}\right)$")
+    # plt.yscale('log')
+    plt.ylabel(r"$\Vert u - \hat{u}\Vert_{\ell^2}$")
+    plt.show()
+
 
     if model.isnan:
         pass
@@ -102,7 +113,7 @@ comp = EvalCoarseSoln()
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def run_test(model, optim_params=False):
+def run_test(model, optim_params=False, x=None):
     #### ensure model is not gabbage ####
     if model.isnan:
         return float('NAN'), float('NAN')
@@ -139,8 +150,16 @@ def run_test(model, optim_params=False):
 
             errL2.append(err)
             errRMSE.append(err_rmse)
-            # plt.plot(x, y[0, :].detach().numpy())
-            # plt.plot(x, yf)
+            ################# For oral Exam #############
+            # # plt.plot(x, yf, label=r'$u$')
+            # # plt.plot(x, y, label=r'$\hat{u}$')
+            # plt.plot(x, y)
+            # # plt.legend()
+            # # plt.title("Reconstructed vs True Solutions")
+            # plt.title("Bunch of Reconstructed Solutions")
+            # plt.xlabel(r"$x$")
+            # plt.ylabel(r"$\hat{u}(x)$")
+        plt.show()
         errL2 = np.array(errL2)
         av_L2error = np.mean(errL2)
         av_RMSE = np.mean(errRMSE)
@@ -152,6 +171,12 @@ def run_test(model, optim_params=False):
         # plt.title(r"Histogram of relative error in $L^2$ norm")
         # # plt.title(r"Histogram of Relative RMSE Error")
         # plt.show()
+
+        ################### For Oral Exam ################
+        # Percentage absolute RMSE
+        errors = {'min':np.min(errRMSE)*100, 'max':np.max(errRMSE)*100, 'mean':np.mean(errRMSE)*100 }
+        print("Error Statistics: ")
+        print(errors)
     return av_RMSE, av_L2error
 
 

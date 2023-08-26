@@ -88,10 +88,12 @@ class CVAE(nn.Module):
     
     
 
-def net_inp_out_sizes(no_layers=6):
+def net_inp_out_sizes(no_layers=6, seed=None):
     """
     accepts number of layers and generates VAE layers input and output integers for number of layers hyperparameter optimization
     """
+    if seed:
+        np.random.seed(seed)
     no_layers = no_layers
     input_size = out_features
 
